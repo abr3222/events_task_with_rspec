@@ -11,7 +11,19 @@ class EventsController < ApplicationController
     end
   end
   def event_params
-    { employee_id: params[:employee_id], timestamp: Time.at(params[:timestamp].to_i), kind: params[:kind] }
+    { employee_id: employee_id, timestamp: time_stamp, kind: kind }
   end
 
+  def employee_id
+    @employee_id ||= params[:employee_id].nil? ? nil : params[:employee_id]
+  end
+
+  def time_stamp
+    # return nil if params[:timestamp] == 'bad'
+    @time_stamp ||= params[:timestamp].to_i == 0 ?  nil : Time.at(params[:timestamp].to_i).to_datetime
+  end
+
+  def kind
+    @kind ||= Event.kinds.keys.include?(params[:kind]) ? params[:kind] : nil
+  end
 end
